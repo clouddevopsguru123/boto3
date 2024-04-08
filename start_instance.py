@@ -1,0 +1,31 @@
+import boto3
+
+client = boto3.client('ec2',region_name='us-east-1')
+
+instance = client.describe_instances(
+    Filters=[
+        {
+            'Name': 'instance-state-name',
+            'Values': [
+                'stopped',
+            ]
+        },
+        {
+        'Name': 'tag:Env',
+        'Values': [
+            'dev'
+        ]
+    },
+    ]
+)
+for instances in instance['Reservations']:
+    #print(instances)
+    for instanceIds in instances['Instances']:
+        ids = instanceIds['InstanceId']
+        print(ids)
+        start_instances = client.start_instances(
+            InstanceIds=[ids,]
+        )
+
+
+    
